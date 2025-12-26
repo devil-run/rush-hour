@@ -4,19 +4,6 @@ import copy
 import sys
 import os
 
-try:
-    from flask import Flask, render_template_string, request, jsonify
-    from pyngrok import ngrok
-except ImportError:
-    print("❌ 缺少库！请运行: pip install flask pyngrok")
-    sys.exit(1)
-    
-NGROK_AUTH_TOKEN = "371K2TWzMRJb1bgDbvEanVArTBh_3pYnqywYuxuZXt5co77rw"
-
-if NGROK_AUTH_TOKEN != "371K2TWzMRJb1bgDbvEanVArTBh_3pYnqywYuxuZXt5co77rw":
-    ngrok.set_auth_token(NGROK_AUTH_TOKEN)
-
-app = Flask(__name__)
 
 class Solver:
     def __init__(self, width, height, cars, target_car_index):
@@ -736,14 +723,8 @@ def solve():
 
 
 if __name__ == '__main__':
-    PORT = 5000
-    try:
-        public_url = ngrok.connect(PORT).public_url
-        print("\n" + "=" * 50)
-        print(f"🚀 成功！公网链接: {public_url}")
-        print("=" * 50 + "\n")
-    except Exception as e:
-        print(f"\n⚠️ Ngrok 失败: {e}")
-        print(f"👉 本机访问: http://127.0.0.1:{PORT}\n")
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+    
 
     app.run(port=PORT, debug=False)
